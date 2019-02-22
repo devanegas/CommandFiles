@@ -15,6 +15,8 @@ public class AddAlphaCommand implements Command {
         backup = new File("temp_" +file.getName());
         Files.copy(file.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
+
+
     public void execute() throws IOException {
 
         if(file.exists())
@@ -24,8 +26,9 @@ public class AddAlphaCommand implements Command {
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter out = new PrintWriter(bw)){
             out.println("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+            out.close();
         }catch (IOException e) {
-
+            undo();
         }
     }
 

@@ -29,7 +29,7 @@ public class AddNumCommand implements Command {
             out.println("0123456789");
 
         }catch (IOException e) {
-
+            undo();
         }
     }
 

@@ -28,7 +28,7 @@ public class RemoveLine implements Command{
         Files.copy(file.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
-    private boolean validData(File file, int line) throws FileNotFoundException {
+    public boolean validData(File file, int line) throws FileNotFoundException {
         String local_string;
         try(BufferedReader br = new BufferedReader(new FileReader(file.getName()))){
             while( (local_string = br.readLine() ) != null) {row_counter++;}
@@ -78,7 +78,9 @@ public class RemoveLine implements Command{
             lineCount++;
         }
 
-        }catch (IOException e) { }
+        }catch (IOException e) {
+            undo();
+        }
 
 
         //Erase contents from original File
@@ -107,6 +109,8 @@ public class RemoveLine implements Command{
     public void undo() throws FileNotFoundException {
 
         String l;
+
+
         //Erase contents from original File
         PrintWriter writer = new PrintWriter(file.getName());
         writer.print("");
@@ -124,7 +128,9 @@ public class RemoveLine implements Command{
                     out.println(l);
                 }
             }
-        }catch (IOException e) { }
+        }catch (IOException e) {
+
+        }
 
         //Delete temporary file
         //backup.delete();
