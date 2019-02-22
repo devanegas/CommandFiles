@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -22,11 +24,19 @@ public class AddAlphaCommand implements Command {
         if(file.exists())
             setBackup();
         try(
-            FileWriter fw = new FileWriter(file.getName(), true);
-            BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter out = new PrintWriter(bw)){
-            out.println("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
-            out.close();
+                FileChannel channel = new RandomAccessFile(file, "rw").getChannel();
+                FileWriter fw = new FileWriter(file.getName(), true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                PrintWriter out = new PrintWriter(bw)){
+
+            FileLock lock;
+            lock = channel.tryLock();
+
+            if( lock != null ) {
+                out.println("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+                lock.release();
+            }
+
         }catch (IOException e) {
             undo();
         }

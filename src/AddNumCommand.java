@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -22,11 +24,18 @@ public class AddNumCommand implements Command {
             setBackup();
 
         try(
-        FileWriter fw = new FileWriter(file.getName(), true);
-        BufferedWriter bw = new BufferedWriter(fw);
-        PrintWriter out = new PrintWriter(bw)){
+                FileChannel channel = new RandomAccessFile(file, "rw").getChannel();
+                FileWriter fw = new FileWriter(file.getName(), true);
+                BufferedWriter bw = new BufferedWriter(fw);
+                PrintWriter out = new PrintWriter(bw)){
 
-            out.println("0123456789");
+            FileLock lock;
+            lock = channel.tryLock();
+
+            if( lock != null ) {
+                out.println("0123456789");
+                lock.release();
+            }
 
         }catch (IOException e) {
             undo();

@@ -53,6 +53,7 @@ public class RemoveLine implements Command{
             setBackup();
 
 
+
         File temp = new File("temp.txt");
         int lineCount = 1;
 
