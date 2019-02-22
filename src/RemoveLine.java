@@ -28,6 +28,7 @@ public class RemoveLine implements Command{
         Files.copy(file.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
+
     public boolean validData(File file, int line) throws FileNotFoundException {
         String local_string;
         try(BufferedReader br = new BufferedReader(new FileReader(file.getName()))){
