@@ -12,10 +12,12 @@ public class AddNumCommand implements Command {
 
     public void execute(){
         try(
-                FileWriter fw = new FileWriter(name, true);
-                BufferedWriter bw = new BufferedWriter(fw);
-                PrintWriter out = new PrintWriter(bw)){
+        FileWriter fw = new FileWriter(name, true);
+        BufferedWriter bw = new BufferedWriter(fw);
+        PrintWriter out = new PrintWriter(bw)){
+
             out.println("0123456789");
+
         }catch (IOException e) {
 
         }
