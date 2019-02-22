@@ -7,6 +7,7 @@ public class RemoveLine implements Command{
     int row_counter = 0;
     int line;
     File file;
+    File backup;
 
 
     public RemoveLine(File file, int line) throws FileNotFoundException {
@@ -16,11 +17,16 @@ public class RemoveLine implements Command{
             this.line = line;
         }
         else{
-            System.out.println("> [Error] File has ["+ row_counter +"] lines. Make sure to insert a number between [1 and " + (row_counter) + "]");
+            System.out.println("> [Error] File has ["+ row_counter +"] lines. Make sure to insert a number between [0 and " + (row_counter) + "]");
         }
 
     }
 
+    public void setBackup() throws IOException {
+        //Generate Backup
+        backup = new File("temp_" +file.getName());
+        Files.copy(file.toPath(), backup.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    }
 
     private boolean validData(File file, int line) throws FileNotFoundException {
         String local_string;
@@ -30,6 +36,9 @@ public class RemoveLine implements Command{
             e.printStackTrace();
         }
 
+        if(row_counter == 0){
+            System.out.println();
+        }
         if(line <= row_counter && line > 0){
             return true;
         }
@@ -39,6 +48,10 @@ public class RemoveLine implements Command{
     }
 
     public void execute() throws IOException {
+        if(file.exists())
+            setBackup();
+
+
         File temp = new File("temp.txt");
         int lineCount = 1;
 
@@ -89,5 +102,31 @@ public class RemoveLine implements Command{
 
         //Delete temporary file
         temp.delete();
+    }
+
+    public void undo() throws FileNotFoundException {
+
+        String l;
+        //Erase contents from original File
+        PrintWriter writer = new PrintWriter(file.getName());
+        writer.print("");
+        writer.close();
+
+        //Repopulate File
+        try(BufferedReader br = new BufferedReader(new FileReader("temp_" +file.getName())))
+        {
+            while( (l = br.readLine() ) != null) {
+                try(
+                        FileWriter fw = new FileWriter(file.getName(), true);
+                        BufferedWriter bw = new BufferedWriter(fw);
+                        PrintWriter out = new PrintWriter(bw)){
+
+                    out.println(l);
+                }
+            }
+        }catch (IOException e) { }
+
+        //Delete temporary file
+        //backup.delete();
     }
 }

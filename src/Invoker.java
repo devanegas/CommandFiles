@@ -1,3 +1,4 @@
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class Invoker {
@@ -13,6 +14,10 @@ public class Invoker {
 
     public void Invoke(int index) throws IOException {
         actions[index].execute();
+    }
+
+    public void Undo(int index) throws FileNotFoundException {
+        actions[index].undo();
     }
 
 }

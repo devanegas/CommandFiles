@@ -10,17 +10,29 @@ public class Main {
         File file = new File(name);
         Invoker invoke = new Invoker();
 
-/*        AddAlphaCommand addABC = new AddAlphaCommand(name);
+        //Set Commands
+        AddAlphaCommand addABC = new AddAlphaCommand(file);
         invoke.setCommand(0,addABC);
-        invoke.Invoke(0);
-
-        AddNumCommand add123 = new AddNumCommand(name);
+        AddNumCommand add123 = new AddNumCommand(file);
         invoke.setCommand(1,add123);
-        invoke.Invoke(1);*/
 
-        RemoveLine remove = new RemoveLine(file, 8);
+        invoke.Invoke(0);
+        invoke.Invoke(0);
+        invoke.Invoke(1);
+        invoke.Invoke(1);
+        invoke.Invoke(0);
+        invoke.Invoke(1);
+        invoke.Undo(0);
+
+
+/*        RemoveLine remove = new RemoveLine(file, 2);
         invoke.setCommand(2,remove);
         invoke.Invoke(2);
+        invoke.Undo(0);*/
+
+
+
+
 
     }
 }
